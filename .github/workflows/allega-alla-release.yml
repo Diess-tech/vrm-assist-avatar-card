@@ -1,0 +1,30 @@
+# Quando pubblichi una release, allega il file della card.
+# Serve a far contare i download (HACS scarica il file allegato) e a tenere
+# la release completa. Si può lanciare anche a mano su una release già
+# pubblicata: Actions > "Allega la card alla release" > Run workflow.
+name: Allega la card alla release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag della release (per esempio v0.1.2)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  allega:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+      - name: Allega il file della card
+        run: gh release upload "$TAG" dist/vrm-assist-avatar-card.js --clobber --repo "${{ github.repository }}"

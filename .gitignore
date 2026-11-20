@@ -1,0 +1,5 @@
+node_modules/
+test/shots/
+# local test files (models and clips downloaded for the test bench; Mixamo clips must not be redistributed)
+test/clips/
+.court/

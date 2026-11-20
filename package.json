@@ -1,0 +1,22 @@
+{
+  "name": "vrm-assist-avatar-card",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Home Assistant Lovelace card: a 3D VRM avatar that listens, thinks and talks with your Assist voice satellite",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/vrm-assist-avatar-card.js --bundle --minify --format=esm --target=es2020 --legal-comments=none --outfile=dist/vrm-assist-avatar-card.js",
+    "serve": "node test/serve.mjs",
+    "shots": "npm run build && node test/screenshots.mjs",
+    "test": "npm run build && node test/editor-test.mjs"
+  },
+  "dependencies": {
+    "@pixiv/three-vrm": "3.5.2",
+    "@pixiv/three-vrm-animation": "3.5.2",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
