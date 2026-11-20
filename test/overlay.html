@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prova sovrimpressione</title>
+<style>
+  :root { --primary-color:#03a9f4; --primary-text-color:#e1e1e1; --secondary-text-color:#9b9b9b; --card-background-color:#1c1c1c; --divider-color:#333; }
+  body { margin:0; background:#111; color:#e1e1e1; font:14px sans-serif; }
+  .bar { height:56px; background:#1c1c1c; display:flex; align-items:center; padding:0 16px; font-size:19px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; padding:8px; }
+  .tile { background:#1c1c1c; border-radius:12px; padding:14px; height:56px; }
+  .tile b { display:block; margin-top:6px; color:#03a9f4; }
+</style></head>
+<body>
+<home-assistant></home-assistant>
+<div class="bar">S20 Claude</div>
+<div class="grid" id="grid"></div>
+<script type="module">
+  const q = new URLSearchParams(location.search);
+  const names = ["Luce soggiorno","Termostato","Tapparelle","Lavatrice","Porta ingresso","Meteo","Musica","Consumo","Camera","Cucina","Allarme","Giardino"];
+  document.getElementById("grid").innerHTML = names.map(n => `<div class="tile">${n}<b>acceso</b></div>`).join("");
+  const ENTITY = "assist_satellite.voice_pe";
+  const ha = document.querySelector("home-assistant");
+  window.setSatState = s => { ha.hass = { states: { [ENTITY]: { entity_id: ENTITY, state: s, attributes: {} } } }; };
+  window.setSatState(q.get("state") || "idle");
+  try { localStorage.clear(); } catch {}
+  await import("../dist/vrm-assist-avatar-card.js");
+  const card = document.createElement("vrm-assist-avatar-card");
+  card.setConfig({ model: q.get("model") || "clips/models/sample-vrm1.vrm", entity: ENTITY, overlay: { position: q.get("pos") || "bottom-right", width: q.get("w") || "45vw", height: q.get("h") || "55vh" } });
+  document.getElementById("grid").appendChild(card);
+  window.inner = () => document.querySelector("#vrm-assist-avatar-overlay vrm-assist-avatar-card");
+  const wait = setInterval(() => { const c = window.inner(); if (c && c._vrm) { clearInterval(wait); window.__ready = true; } }, 200);
+</script>
+</body></html>
